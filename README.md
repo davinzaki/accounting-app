@@ -5,7 +5,8 @@
 
 ---
 
-![image]()
+![image](![Screenshot 2023-05-29 135637](https://github.com/davinzaki/accounting-app/assets/101463185/f211eb48-2817-4b77-b060-ab7a376b877d)
+)
 
 ## Features
 
