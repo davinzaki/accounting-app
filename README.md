@@ -5,8 +5,8 @@
 
 ---
 
-![image](![Screenshot 2023-05-29 135637](https://github.com/davinzaki/accounting-app/assets/101463185/f211eb48-2817-4b77-b060-ab7a376b877d)
-)
+![Noribooks screenshot](https://github.com/davinzaki/accounting-app/assets/101463185/e8f46ae7-1dd2-4775-a71f-b61ccd1842a8)
+
 
 ## Features
 
