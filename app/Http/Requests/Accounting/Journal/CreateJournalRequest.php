@@ -26,6 +26,7 @@ class CreateJournalRequest extends FormRequest
         return [
             'date' => 'required|date:format:Y-m-d',
             'description' => 'required|string',
+            // 'amount' => 'required',
         ];
     }
 }

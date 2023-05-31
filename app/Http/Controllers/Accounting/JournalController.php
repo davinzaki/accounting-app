@@ -51,7 +51,7 @@ class JournalController extends Controller
         }
     }
 
-    public function createData(CreateJournalRequest $request)
+    public function createData(Request $request)
     {
         try {
             $data = $this->journalService->createData($request);
@@ -63,19 +63,16 @@ class JournalController extends Controller
         }
     }
 
-    // public function createOrder(CreateOrderRequest $request)
-    // {
-    //     try {
-    //         DB::beginTransaction();
-    //         $data = $this->transactionService->payOrder($request);
-    //         $result = new SubmitOrderResource($data, 'Success Create Order');
-    //         DB::commit();
-            
-    //         return $this->respond($result);
-    //     } catch (\Exception $e) {
-    //         DB::rollback();
-    //         return $this->exceptionError($e->getMessage());
-    //     }
-    // }
+    public function deleteData($id)
+    {
+        try {
+            $data = $this->journalService->deleteData($id);
+
+            $result = new SubmitJournalResource($data, 'Success Delete Journal');
+            return $this->respond($result);
+        } catch (\Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
 
 }

@@ -37,56 +37,39 @@ class JournalService
         return $journalEntries;
     }
 
-    public function storeData($request){
-        $inputs =  $request->only(['account_id','description' ,'debit','credit']);
-        // if ($inputs['payment_status'] === 'paid') {
-        //     $inputs['paid_at'] = now()->format('Y-m-d H:i:s');; // Menggunakan waktu saat ini sebagai paid_date
-        // } else {
-        //     $inputs['paid_at'] = null; // Jika payment_status bukan "paid", set paid_date menjadi null
-        // }
+    public function createData($request){
+        $inputs =  $request->only(['description' , 'date', 'amount']);
 
-        $journal = new Journal();
-        $journal->fill($inputs);
-        $journal->save();
+        if($request->amount === 0) {
+            throw new \Exception('Input equivalents value of Debit and Credit');
+        }
+
+        $journal = Journal::create($inputs);
+
+
         $journalID = $journal->id;
-        $selectedJournals = $request->input('journal_selected');
+        $journalEntries = $request->input('journal_entries');
         
-        foreach($selectedJournals as $account){
-              $journalItems = new JournalEntry();
-              $journalItems->journal_id = $journalID;
-              $journalItems->account_id = intval($account['account_id']);
-              $journalItems->debit = $account['debit'];
-              $journalItems->credit = $account['credit'];
-              $journalItems->amount = $account['amount'];
-              $journalItems->save();
+        foreach($journalEntries as $journal){
+              $journalEntry = new JournalEntry();
+              $journalEntry->journal_id = $journalID;
+              $journalEntry->account_id = intval($journal['account_id']);
+              $journalEntry->debit = $journal['debit'];
+              $journalEntry->description = $journal['description'];
+              $journalEntry->credit = $journal['credit'];
+              $journalEntry->save();
         }
   
         return $journal;
      }
-    public function createJournalEntry($request)
+
+    public function deleteData($id)
     {
-        $inputs = $request->only(['journal_entry_id', 'date', 'description']);
-
-
-    }
-
-    public function createData($request)
-    {
-        // Create the Journal after that
-        $inputs = $request->only(['journal_entry_id', 'date', 'description']);
-        // $inputs['image'] = $file;
-        $Journal = Journal::create($inputs);
+        $Journal = Journal::findOrFail($id);
+        $Journal->delete();
 
         return $Journal;
     }
-
-    // public function deleteData($id)
-    // {
-    //     $Journal = Journal::findOrFail($id);
-    //     $Journal->delete();
-
-    //     return $Journal;
-    // }
 
     // public function updateData($id, $request)
     // {

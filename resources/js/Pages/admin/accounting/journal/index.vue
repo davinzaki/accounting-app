@@ -322,12 +322,4 @@ onMounted(() => {
         :close-label="alertData.closeLabel"
         :submit-label="alertData.submitLabel"
     />
-    <!-- <VModalForm
-        :data="itemSelected"
-        :update-action="updateAction"
-        :open-dialog="openModalForm"
-        @close="closeModalForm"
-        @successSubmit="successSubmit"
-        :additional="additional"
-    /> -->
 </template>

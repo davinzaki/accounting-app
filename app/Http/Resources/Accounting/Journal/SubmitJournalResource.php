@@ -27,7 +27,6 @@ class SubmitJournalResource extends JsonResource
         return [
             'data' => [
                 'id' => $this->id,
-                // 'journal_entry_id' => $this->journal_entry_id,
                 'date' => $this->date,
                 'description' => $this->description,
             ],

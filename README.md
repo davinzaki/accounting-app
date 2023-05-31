@@ -35,4 +35,4 @@ When you contribute code, the best thing to do is imitate the existing pattern B
 
 ## License
 
-Noribooks is released under the [AGPL-3.0](./LICENSE) license.
+Noribooks is released under the [MIT](./LICENSE) license.

@@ -9,8 +9,9 @@ import dayjs from "dayjs";
 import { notify } from "notiwind";
 import { object, string } from "vue-types";
 import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, computed } from "vue";
 import AppLayout from "@/layouts/apps.vue";
+import number_format from "@/composables/formatting";
 import debounce from "@/composables/debounce";
 import VDropdownEditMenu from "@/components/VDropdownEditMenu/index.vue";
 import VDataTable from "@/components/VDataTable/index.vue";
@@ -33,7 +34,6 @@ const query = ref([]);
 const searchFilter = ref("");
 const journalEntry = ref({ id: "" });
 const stopDelete = ref(true);
-const amount = ref(0);
 
 const form = ref({
     date: "",
@@ -164,16 +164,19 @@ const deleteHandle = async () => {
         });
 };
 
+const amount = ref(0);
+const debit = ref(0);
+const credit = ref(0);
+const totalDebit = ref(0);
+const totalCredit = ref(0);
 const submit = () => {
     // let amount = 0;
-    let total_debit = 0;
-    let total_credit = 0;
     journalEntries.value.map((journal) => {
-        total_debit += journal.debit;
-        total_credit += journal.credit;
+        totalDebit.value += journal.debit;
+        totalCredit.value += journal.credit;
 
-        if (total_debit === total_credit) {
-            amount.value += total_debit;
+        if (totalDebit.value === totalCredit.value) {
+            amount.value += totalDebit.value;
         } else {
             amount.value = 0;
         }
@@ -183,8 +186,8 @@ const submit = () => {
         description: form.value.description,
         journal_entries: journalEntries.value,
         amount: +amount.value,
-        total_debit: total_debit,
-        total_credit: total_credit,
+        total_debit: +totalDebit.value,
+        total_credit: +totalCredit.value,
     };
 
     console.log(data);
@@ -208,6 +211,7 @@ const submit = () => {
                 },
                 2500
             );
+            Inertia.visit(route("accounting.journal.index"));
         })
         .catch((res) => {
             console.log(res.response.data);
@@ -222,17 +226,26 @@ const submit = () => {
         });
 };
 
-const handleAmount = (index) => {
-    try {
-        let totalDebit = 0;
-        let totalCredit = 0;
-        totalDebit += journalEntries.value[index].debit;
-        totalCredit += journalEntries.value[index].credit;
-    } catch (e) {
-        totalDebit = 0;
-        totalCredit = 0;
-    }
-};
+// const handleAmount = (index) => {
+//     try {
+//         let totalDebit = 0;
+//         let totalCredit = 0;
+//         totalDebit += journalEntries.value[index].debit;
+//         totalCredit += journalEntries.value[index].credit;
+//     } catch (e) {
+//         totalDebit = 0;
+//         totalCredit = 0;
+//     }
+// };
+
+const difference = computed(() => {
+    const difference = totalDebit.value - totalCredit.value;
+    return Math.abs(difference);
+});
+
+const canCreateJournal = computed(() => {
+    return difference.value === 0;
+});
 </script>
 
 <template>
@@ -297,7 +310,7 @@ const handleAmount = (index) => {
                     <td class="w-1/3">
                         <VSelect
                             placeholder="Choose Account"
-                            v-model="journalEntries[index].account_id"
+                            v-model="form.account_id"
                             :options="additional.account_list"
                             :errorMessage="formError.account_id"
                             @update:modelValue="formError.account_id = ''"
@@ -351,6 +364,12 @@ const handleAmount = (index) => {
                     class="mt-auto"
                 />
             </div>
+        </section>
+        <section v-for="(journal, index) in journalEntries" :key="index">
+            <div>Rp{{ number_format(journal.debit, 2, ",", ".") }}</div>
+            <div>Rp{{ number_format(journal.credit, 2, ",", ".") }}</div>
+            <!-- <div>{{ totalDebit + journal.debit }}</div> -->
+            <!-- <div>{{ difference }}</div> -->
         </section>
         <footer>
             <div class="flex flex-col px-6 py-3 border-slate-200">

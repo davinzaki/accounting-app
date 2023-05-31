@@ -32,12 +32,14 @@ class JournalListResource extends ResourceCollection
         $account = explode(',', $data->account);
         $debit = explode(',', $data->debit);
         $credit = explode(',', $data->credit);  
+        $description = explode(',', $data->description);  
 
         $journal_entries = [];
         for ($i = 0; $i < count($account); $i++) {
             $journal_entries[] = [
                 'account' => $account[$i],
                 'debit' => $debit[$i],
+                'description' => $description[$i],
                 'credit' => $credit[$i]
             ];
         }
@@ -45,8 +47,8 @@ class JournalListResource extends ResourceCollection
         return [
             'id' => $data->id,
             'date' => $data->date,
-            'amount' => $data->amount,
             'description' => $data->description,  
+            'amount' => $data->amount,
             'amount_formatted' => number_format($data->amount, 2, ',', '.'),
             
         ];
